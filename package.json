@@ -1,0 +1,36 @@
+{
+  "name": "ivangsa-react-tictactoe",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
+    "redux": "^4.0.1",
+    "react-redux": "^6.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "prettier:format": "prettier --write \"{,src/**/}*.{js,jsx,scss}\"",
+    "lint": "tslint --project tsconfig.json -e 'node_modules/**'",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "devDependencies": {
+    "node-sass": "^4.11.0",
+    "prettier": "1.14.3",
+    "react-scripts": "latest",
+    "tslint": "5.11.0",
+    "tslint-config-prettier": "1.15.0",
+    "tslint-eslint-rules": "5.4.0",
+    "tslint-loader": "3.6.0",
+    "tslint-react": "3.6.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
