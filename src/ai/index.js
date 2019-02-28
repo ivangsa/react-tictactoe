@@ -1,4 +1,7 @@
 export const calculateNextMove = (boardState, nextPlayerSymbol) => {
+  if (!boardState[4]) {
+    return 4;
+  }
   return randomMove(boardState);
 };
 

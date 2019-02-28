@@ -1,21 +1,21 @@
+import { initialState } from '.';
 import * as actionTypes from './actionTypes';
 
 export const boardReducer = (state = {}, action) => {
   if (action.type === actionTypes.NEW_GAME_ACTION) {
-    const matchId = 1;
-    const isComputerStarting = false; // Math.random() >= 0.5;
-    let nextPlayerSymbol = 'o';
-    if (isComputerStarting) {
-      nextPlayerSymbol = Math.random() >= 0.5 ? 'x' : 'o';
-    }
-    const computerPlayerSymbol = other(nextPlayerSymbol);
-    const humanPlayerSymbol = other(computerPlayerSymbol);
+    return {
+      ...initialState,
+      ...action.payload,
+      history: [initialState.boardState],
+      humanPlayerSymbol: other(action.payload.computerPlayerSymbol)
+    };
+  }
+  if (action.type === actionTypes.SELECT_HUMAN_SYMBOL_ACTION) {
     return {
       ...state,
-      matchId,
-      humanPlayerSymbol,
-      computerPlayerSymbol,
-      nextPlayerSymbol
+      ...action.payload,
+      nextPlayerSymbol: action.payload.humanPlayerSymbol,
+      computerPlayerSymbol: other(action.payload.humanPlayerSymbol)
     };
   }
   if (action.type === actionTypes.MOVE_ACTION) {

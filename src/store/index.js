@@ -1,4 +1,4 @@
-import { createStore, combineReducers } from 'redux';
+import { createStore } from 'redux';
 import { boardReducer } from './reducers';
 
 export const initialState = {
@@ -7,7 +7,7 @@ export const initialState = {
   humanPlayerSymbol: null, //  ( one of ['o','x', null])
   computerPlayerSymbol: null, // ( one of ['o','x', null])
   nextPlayerSymbol: null, // ( one of ['o','x', null])
-  history: [Array(9).fill(null)], // array of moves: { player: ( one of ['o','x']) , position: [0-8] }
+  history: [], // array of moves: { player: ( one of ['o','x']) , position: [0-8] }
   step: 0
 };
 

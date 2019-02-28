@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import ReactDOM, { render } from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import Game from './Game';
-import { Provider, connect } from 'react-redux';
 import store from './store';
 import './style.scss';
 

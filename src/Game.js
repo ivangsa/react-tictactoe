@@ -1,33 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Board from './Board';
-import * as actions from './store/actions';
 import { calculateNextMove } from './ai';
+import { Board, ChooseSymbolPanel, NewGamePanel, EndGameResult } from './Board';
+import * as actions from './store/actions';
 
 function mapStateToProps(state) {
   return { ...state };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      newGameAction: actions.newGameAction,
-      moveAction: actions.moveAction
-    },
-    dispatch
-  );
+  return bindActionCreators({ ...actions }, dispatch);
 }
 
 class Game extends React.Component {
   onNewGameClick() {
     this.props.newGameAction();
-    // if (this.props.nextPlayerSymbol === this.props.computerPlayerSymbol) {
-    //   this.doComputerMove();
-    // }
   }
 
-  onSquareClick(i) {
+  onHumanClick(i) {
     const boardState = this.props.boardState;
     if (boardState[i] || calculateWinner(boardState)) {
       return;
@@ -35,8 +26,18 @@ class Game extends React.Component {
     this.props.moveAction(i);
   }
 
-  doComputerMove() {
-    const position = calculateNextMove(this.props.boardState, this.props.nextPlayerSymbol);
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.nextPlayerSymbol &&
+      nextProps.computerPlayerSymbol === nextProps.nextPlayerSymbol &&
+      !calculateWinner(nextProps.boardState)
+    ) {
+      this.doComputerMove(nextProps.boardState);
+    }
+  }
+
+  doComputerMove(boardState) {
+    const position = calculateNextMove(boardState, this.props.computerPlayerSymbol);
     this.props.moveAction(position);
   }
 
@@ -44,38 +45,46 @@ class Game extends React.Component {
 
   onRedoClick() {}
 
-  getNextPlayerName() {
-    return this.props.nextPlayerSymbol !== null
-      ? this.props.humanPlayerSymbol === this.props.nextPlayerSymbol
-        ? 'You move'
-        : 'Computer'
-      : '';
-  }
-
   render() {
     const boardState = this.props.boardState;
     const winner = calculateWinner(boardState);
 
-    let status;
-    if (winner) {
-      status = 'Winner: ' + this.props.humanPlayerSymbol === winner ? 'You Win!!' : ' Computer says no!!';
-    } else {
-      status = `Computer: ${this.props.humanPlayerSymbol}
-       Human: ${this.props.computerPlayerSymbol}
-       Next player: ${this.getNextPlayerName()}`;
+    if (!this.props.matchId) {
+      return this.renderGame(<NewGamePanel onClick={() => this.onNewGameClick()} />);
     }
+
+    if (!this.props.nextPlayerSymbol) {
+      return this.renderGame(<ChooseSymbolPanel onClick={humanPlayerSymbol => this.props.selectHumanSymbolAction(humanPlayerSymbol)} />);
+    }
+
+    if (false && winner) {
+      return this.renderGame(<EndGameResult onClick={() => this.onNewGameClick()} />);
+    }
+
+    if (this.props.matchId) {
+      return this.renderGame(<Board squares={boardState} onClick={i => this.onHumanClick(i)} />);
+    }
+  }
+
+  renderGame(game) {
+    const boardState = this.props.boardState;
+    const winner = calculateWinner(boardState);
+
+    const status = `
+    MatchId: ${this.props.matchId}
+    Human: ${this.props.humanPlayerSymbol}
+    Computer: ${this.props.computerPlayerSymbol}
+    Next player: ${this.props.nextPlayerSymbol}
+    Winner: ${winner}`;
 
     return (
       <div className="tic-tac-toe-game">
-        <button onClick={() => this.onNewGameClick()}>New Game X</button>
-        <button onClick={() => this.doComputerMove()}>Computer Move</button>
-        <Board squares={boardState} onClick={i => this.onSquareClick(i)} />
-        <div className="tic-tac-toe-info hidden">
-          <h1 className="tic-tac-toe--title-label" />
-        </div>
+        {game}
         <pre>{status}</pre>
+        <div onClick={() => this.onNewGameClick()}>Reset Game</div>
       </div>
     );
+    // return <div className="tic-tac-toe-game">{game}</div>;
   }
 }
 
