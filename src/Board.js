@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-
 function Square(props) {
   const className = props.value + 'Symbol tic-tac-toe-cell';
   return <div className={className} onClick={props.onClick} />;

@@ -1,52 +1,55 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import Board from './Board';
-import * as actions from './store';
+import * as actions from './store/actions';
+import { calculateNextMove } from './ai';
 
 function mapStateToProps(state) {
-  return {...state};
+  return { ...state };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    newGameAction: actions.newGameAction,
-    moveAction: actions.moveAction
-  }, dispatch);
+  return bindActionCreators(
+    {
+      newGameAction: actions.newGameAction,
+      moveAction: actions.moveAction
+    },
+    dispatch
+  );
 }
 
-
 class Game extends React.Component {
-
-  constructor(props) {
-    super(props);
-    props.newGameAction(1,'x','x');
+  onNewGameClick() {
+    this.props.newGameAction();
+    // if (this.props.nextPlayerSymbol === this.props.computerPlayerSymbol) {
+    //   this.doComputerMove();
+    // }
   }
 
-  handleClick(i) {
+  onSquareClick(i) {
     const boardState = this.props.boardState;
     if (boardState[i] || calculateWinner(boardState)) {
       return;
     }
     this.props.moveAction(i);
-
-    // boardState[i] = this.props.xIsNext ? 'x' : 'o';
-    // this.setState({
-    //   history: history.concat([
-    //     {
-    //       squares: squares
-    //     }
-    //   ]),
-    //   stepNumber: history.length,
-    //   xIsNext: !this.props.xIsNext
-    // });
   }
 
-  jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: step % 2 === 0
-    });
+  doComputerMove() {
+    const position = calculateNextMove(this.props.boardState, this.props.nextPlayerSymbol);
+    this.props.moveAction(position);
+  }
+
+  onUndoClick() {}
+
+  onRedoClick() {}
+
+  getNextPlayerName() {
+    return this.props.nextPlayerSymbol !== null
+      ? this.props.humanPlayerSymbol === this.props.nextPlayerSymbol
+        ? 'You move'
+        : 'Computer'
+      : '';
   }
 
   render() {
@@ -55,18 +58,22 @@ class Game extends React.Component {
 
     let status;
     if (winner) {
-      status = 'Winner: ' + winner;
+      status = 'Winner: ' + this.props.humanPlayerSymbol === winner ? 'You Win!!' : ' Computer says no!!';
     } else {
-      status = 'Next player: ' + this.props.nextPlayer;
+      status = `Computer: ${this.props.humanPlayerSymbol}
+       Human: ${this.props.computerPlayerSymbol}
+       Next player: ${this.getNextPlayerName()}`;
     }
 
     return (
       <div className="tic-tac-toe-game">
-          <Board squares={boardState} onClick={i => this.handleClick(i)} />
-          <div className="tic-tac-toe-info hidden">
-            <h1 className="tic-tac-toe--title-label" />
-          </div>
-          <div>{status}</div>
+        <button onClick={() => this.onNewGameClick()}>New Game X</button>
+        <button onClick={() => this.doComputerMove()}>Computer Move</button>
+        <Board squares={boardState} onClick={i => this.onSquareClick(i)} />
+        <div className="tic-tac-toe-info hidden">
+          <h1 className="tic-tac-toe--title-label" />
+        </div>
+        <pre>{status}</pre>
       </div>
     );
   }
@@ -95,4 +102,7 @@ function calculateWinner(squares) {
 }
 
 //export default Game;
-export default connect(mapStateToProps, mapDispatchToProps)(Game);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Game);

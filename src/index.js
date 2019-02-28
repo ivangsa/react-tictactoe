@@ -5,4 +5,9 @@ import { Provider, connect } from 'react-redux';
 import store from './store';
 import './style.scss';
 
-ReactDOM.render(<Provider store={store}><Game /></Provider>, document.getElementById('root'));
+ReactDOM.render(
+  <Provider store={store}>
+    <Game />
+  </Provider>,
+  document.getElementById('root')
+);
