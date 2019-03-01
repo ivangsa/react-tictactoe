@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { calculateNextMove } from './ai';
-import { Board, ChooseSymbolPanel, NewGamePanel, EndGameResult } from './Board';
+import { Board, ChooseSymbolPanel, EndGameResult, NewGamePanel } from './Board';
 import * as actions from './store/actions';
 
 function mapStateToProps(state) {
@@ -41,9 +41,26 @@ class Game extends React.Component {
     this.props.moveAction(position);
   }
 
-  onUndoClick() {}
+  onUndoClick() {
+    console.log('undoClick');
+    if (this.canUndo()) {
+      this.props.undoAction();
+    }
+  }
 
-  onRedoClick() {}
+  canUndo() {
+    return this.props.historyIndex > 0; // XXX
+  }
+
+  onRedoClick() {
+    if (this.canRedo()) {
+      this.props.redoAction();
+    }
+  }
+
+  canRedo() {
+    return this.props.history && this.props.historyIndex && this.props.history.length > this.props.historyIndex - 1;
+  }
 
   render() {
     const boardState = this.props.boardState;
@@ -62,7 +79,14 @@ class Game extends React.Component {
     }
 
     if (this.props.matchId) {
-      return this.renderGame(<Board squares={boardState} onClick={i => this.onHumanClick(i)} />);
+      return this.renderGame(
+        <Board
+          squares={boardState}
+          onClick={i => this.onHumanClick(i)}
+          onUndoClick={() => this.onUndoClick()}
+          onRedoClick={() => this.onRedoClick()}
+        />
+      );
     }
   }
 
@@ -71,17 +95,27 @@ class Game extends React.Component {
     const winner = calculateWinner(boardState);
 
     const status = `
-    MatchId: ${this.props.matchId}
-    Human: ${this.props.humanPlayerSymbol}
-    Computer: ${this.props.computerPlayerSymbol}
-    Next player: ${this.props.nextPlayerSymbol}
-    Winner: ${winner}`;
-
+        MatchId: ${this.props.matchId}
+        Human: ${this.props.humanPlayerSymbol}
+        Computer: ${this.props.computerPlayerSymbol}
+        Next player: ${this.props.nextPlayerSymbol}
+        Winner: ${winner}
+        Board State: ${this.props.boardState}
+        History Lenght: ${this.props.history.length}
+        History Index: ${this.props.historyIndex}
+        History: ${this.props.history.map(boardState => boardState.join('-'))}
+        `;
+    console.log('Board State', this.props.boardState);
     return (
-      <div className="tic-tac-toe-game">
-        {game}
-        <pre>{status}</pre>
-        <div onClick={() => this.onNewGameClick()}>Reset Game</div>
+      <div>
+        <div className="tic-tac-toe-game">{game}</div>
+
+        <div className="tic-tac-toe-status">
+          <pre>
+            {status}
+            <button onClick={() => this.onNewGameClick()}>Reset Game</button>
+          </pre>
+        </div>
       </div>
     );
     // return <div className="tic-tac-toe-game">{game}</div>;

@@ -5,7 +5,12 @@ export function Board(props) {
   for (let i = 0; i < 9; i++) {
     rows.push(<Square value={props.squares[i]} onClick={() => props.onClick(i)} key={i} />);
   }
-  return <div className="tic-tac-toe-board">{rows}</div>;
+  return (
+    <div>
+      <div className="tic-tac-toe-board">{rows}</div>
+      <GameToolbar onUndoClick={props.onUndoClick} onRedoClick={props.onRedoClick} />
+    </div>
+  );
 }
 
 function Square(props) {
@@ -13,17 +18,32 @@ function Square(props) {
   return <div className={className} onClick={props.onClick} />;
 }
 
+function GameToolbar(props) {
+  return (
+    <div className="tic-tac-toe-toolbar">
+      <div className="undo" onClick={() => props.onUndoClick()}>
+        Undo
+      </div>
+      <div className="redo" onClick={() => props.onRedoClick()}>
+        Redo
+      </div>
+    </div>
+  );
+}
+
 export function NewGamePanel(props) {
   return (
-    <div className="info-panel">
-      <div onClick={props.onClick}>New Game</div>
+    <div className="tic-tac-toe-info">
+      <div className="tic-tac-toe-new-game-button" onClick={props.onClick}>
+        New Game
+      </div>
     </div>
   );
 }
 
 export function ChooseSymbolPanel(props) {
   return (
-    <div className="info-panel">
+    <div className="tic-tac-toe-info">
       <div>Choose your symbol</div>
       <div className="oSymbol tic-tac-toe-cell" onClick={() => props.onClick('o')}>
         o
@@ -37,7 +57,7 @@ export function ChooseSymbolPanel(props) {
 
 export function EndGameResult(props) {
   return (
-    <div className="info-panel">
+    <div className="tic-tac-toe-info">
       <div onClick={props.onClick}>End Game</div>
     </div>
   );

@@ -3,6 +3,8 @@ $cell-background-color: #9a8297;
 $cell-hover-background-color: #d0782a;
 $field-border-radius: 6px;
 $field-size: 300px;
+$toolbar-size: 60px;
+$status-size: 200px;
 $tic-tac-toe-cell-padding: 10px;
 $field-padding: 5px;
 $cell-margin: 5px;
@@ -12,7 +14,6 @@ $symbol-roundness: 3px;
 $symbol-size: 50px;
 $oSize: $symbol-size - $symbol-thickness;
 
-$new-game-button--height: 20px;
 $new-game-button--color: #9a8297;
 $new-game-button--hover-color: #d0782a;
 $new-game-button--border-radius: 20px;
@@ -33,38 +34,49 @@ body {
   background-color: white;
   border-radius: $field-border-radius;
   width: $field-size;
-  height: $field-size;
+  height: $field-size + $toolbar-size;
   padding: $field-padding;
+
+  .tic-tac-toe-toolbar {
+    width: $field-size;
+    height: $toolbar-size;
+
+    .undo,
+    .redo {
+      background-color: $new-game-button--color;
+      width: $toolbar-size;
+      height: $toolbar-size;
+      border-radius: 15%;
+      color: white;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .undo {
+      float: left;
+    }
+    .redo {
+      float: right;
+    }
+  }
 
   .tic-tac-toe-info {
     width: $field-size;
     height: $field-size;
     background-color: white;
-    position: absolute;
-    top: 0;
-    left: 0;
     border-radius: $field-border-radius;
     transition: visibility 0s 0.3s, opacity 0.3s linear;
     opacity: 1;
-    visibility: visible;
 
-    &.hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
-    .tic-tac-toe-new-game {
-      height: $new-game-button--height;
+    .tic-tac-toe-new-game-button {
+      position: relative;
+      top: 50%;
+      left: 50%;
       background-color: $new-game-button--color;
       border-radius: $new-game-button--border-radius;
       color: white;
-      margin: auto;
       padding: 10px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
       cursor: pointer;
-      transform: translate(-50%, -50%);
-      transition: background-color 0.3s;
       &:hover {
         background-color: $new-game-button--hover-color;
       }
@@ -132,4 +144,15 @@ body {
       }
     }
   }
+}
+
+.tic-tac-toe-status {
+  margin: auto;
+  position: absolute;
+  top: 550px; //FIXME
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: $field-size;
+  height: $status-size;
 }
