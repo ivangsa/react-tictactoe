@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { calculateNextMove, calculateWinner } from './ai';
+import { calculateNextMove, calculateWinner, isTerminal } from './ai';
 import { Board, ChooseSymbolPanel, EndGameResult, NewGamePanel } from './Board';
 import * as actions from './store/actions';
 
@@ -27,11 +27,7 @@ class Game extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.nextPlayerSymbol &&
-      nextProps.computerPlayerSymbol === nextProps.nextPlayerSymbol &&
-      !calculateWinner(nextProps.boardState)
-    ) {
+    if (nextProps.nextPlayerSymbol && nextProps.computerPlayerSymbol === nextProps.nextPlayerSymbol && !isTerminal(nextProps.boardState)) {
       this.doComputerMove(nextProps.boardState);
     }
   }
@@ -59,7 +55,7 @@ class Game extends React.Component {
   }
 
   canRedo() {
-    return this.props.history && this.props.historyIndex && this.props.history.length > this.props.historyIndex - 1;
+    return this.props.history && this.props.historyIndex && this.props.history.length - 1 > this.props.historyIndex;
   }
 
   render() {

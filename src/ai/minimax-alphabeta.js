@@ -1,6 +1,6 @@
-import { calculateScore, getEmptyCells, other, calculateWinner, isTerminal, getRandomEntry, boardToString } from './';
+import { calculateScore, getEmptyCells, getRandomEntry, isTerminal, other } from './';
 
-export function minimaxMove(boardState, computerSymbol) {
+export function minimaxWithAlphaBetaMove(boardState, computerSymbol) {
   const emptyCells = getEmptyCells(boardState);
   console.log('length', emptyCells.length);
 
@@ -21,7 +21,7 @@ export function minimaxMove(boardState, computerSymbol) {
   return getRandomEntry(moves[bestMoves]);
 }
 
-export function minimaxValue(prevBoardState, position, computerSymbol, currentPlayerSymbol, isMaximizing = false) {
+export function minimaxValue(prevBoardState, position, computerSymbol, currentPlayerSymbol, isMaximizing = false, maxAlpha = -1000, minBeta = 1000) {
   const boardState = [...prevBoardState];
   boardState[position] = currentPlayerSymbol;
 
@@ -36,8 +36,18 @@ export function minimaxValue(prevBoardState, position, computerSymbol, currentPl
       const nextBoardState = [...boardState];
       nextBoardState[nextPosition] = currentPlayerSymbol;
       // recurse
-      const score = minimaxValue(nextBoardState, nextPosition, computerSymbol, other(currentPlayerSymbol), !isMaximizing);
+      const score = minimaxValue(nextBoardState, nextPosition, computerSymbol, other(currentPlayerSymbol), !isMaximizing, maxAlpha, minBeta);
       best = isMaximizing ? Math.max(best, score) : Math.min(best, score);
+      // this is the pruning
+      if (isMaximizing) {
+        maxAlpha = Math.max(score, maxAlpha);
+      } else {
+        minBeta = Math.min(score, minBeta);
+      }
+      if (maxAlpha < minBeta) {
+        console.log('pruning position/nextPosition', position, nextPosition, 'score/best', score, best, 'alpha/beta', maxAlpha, minBeta);
+        return best;
+      }
     });
 
     // the minimax value

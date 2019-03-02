@@ -1,5 +1,6 @@
 import { randomMove } from './random';
 import { minimaxMove } from './minimax';
+import { minimaxWithAlphaBetaMove } from './minimax-alphabeta';
 
 /**
  * Calculates computer's next move.
@@ -14,16 +15,11 @@ import { minimaxMove } from './minimax';
  */
 export const calculateNextMove = (boardState, computerSymbol) => {
   // always play center
-  if (!boardState[4]) {
+  if (boardState[4] === null) {
     return 4;
   }
 
-  const emptyCells = getEmptyCells(boardState);
-  if (emptyCells.length === 8) {
-    // if computer goes second choose corner
-    return getRandomEntry([0, 2, 6, 8]);
-  }
-
+  return minimaxWithAlphaBetaMove(boardState, computerSymbol);
   return minimaxMove(boardState, computerSymbol);
   return randomMove(boardState);
 };
@@ -56,17 +52,18 @@ export function calculateWinner(boardState) {
 
 export function calculateScore(boardState, computerSymbol) {
   const emptyCells = getEmptyCells(boardState);
+  const depth = 9 - emptyCells.length;
   const winner = calculateWinner(boardState);
   let score = null;
   if (winner === null) {
-    return 0;
+    score = 0;
+  } else if (winner === computerSymbol) {
+    score = 10 - depth;
+  } else if (winner !== computerSymbol) {
+    score = -10 + depth;
   }
-  if (winner === computerSymbol) {
-    return emptyCells.length;
-  }
-  if (winner !== computerSymbol) {
-    return emptyCells.length * -1;
-  }
+  // console.log("score", score);
+  return score;
 }
 
 export function getEmptyCells(boardState) {
@@ -86,4 +83,13 @@ export function other(symbol) {
     return null;
   }
   return symbol === 'o' ? 'x' : 'o';
+}
+
+export function boardToString(boardState) {
+  boardState = boardState.map(i => (i ? i : 'n')).slice();
+  return `
+    ${boardState.slice(0, 3)}
+    ${boardState.slice(3, 6)}
+    ${boardState.slice(6, 9)}
+    `;
 }

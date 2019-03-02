@@ -33,7 +33,7 @@ export const boardReducer = (state = {}, action) => {
   if (action.type === actionTypes.UNDO_ACTION) {
     // undoing last computer + human movement
     const nextHistoryIndex = state.historyIndex - 2;
-    if (nextHistoryIndex <= 0) {
+    if (nextHistoryIndex < 0) {
       return state;
     }
     return {
