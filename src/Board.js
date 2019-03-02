@@ -34,9 +34,9 @@ function GameToolbar(props) {
 export function NewGamePanel(props) {
   return (
     <div className="tic-tac-toe-info">
-      <div className="tic-tac-toe-new-game-button" onClick={props.onClick}>
+      <span className="tic-tac-toe-new-game-button" onClick={props.onClick}>
         New Game
-      </div>
+      </span>
     </div>
   );
 }

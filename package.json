@@ -12,12 +12,16 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "test:debug": "react-scripts --inspect-brk test --runInBand",
     "eject": "react-scripts eject",
     "prettier:format": "prettier --write \"{,src/**/}*.{js,jsx,scss}\"",
     "lint": "tslint --project tsconfig.json -e 'node_modules/**'",
     "lint:fix": "npm run lint -- --fix"
   },
   "devDependencies": {
+    "jest": "^23.6.0",
+    "jest-css": "^1.0.1",
+    "jest-file": "^1.0.0",
     "node-sass": "^4.11.0",
     "prettier": "1.14.3",
     "react-scripts": "latest",

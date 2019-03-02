@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { calculateNextMove } from './ai';
+import { calculateNextMove, calculateWinner } from './ai';
 import { Board, ChooseSymbolPanel, EndGameResult, NewGamePanel } from './Board';
 import * as actions from './store/actions';
 
@@ -105,7 +105,6 @@ class Game extends React.Component {
         History Index: ${this.props.historyIndex}
         History: ${this.props.history.map(boardState => boardState.join('-'))}
         `;
-    console.log('Board State', this.props.boardState);
     return (
       <div>
         <div className="tic-tac-toe-game">{game}</div>
@@ -122,29 +121,6 @@ class Game extends React.Component {
   }
 }
 
-function calculateWinner(squares) {
-  /* prettier-ignore */
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-  ];
-
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
-  }
-  return null;
-}
-
-//export default Game;
 export default connect(
   mapStateToProps,
   mapDispatchToProps

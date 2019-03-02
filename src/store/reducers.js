@@ -31,8 +31,11 @@ export const boardReducer = (state = {}, action) => {
     };
   }
   if (action.type === actionTypes.UNDO_ACTION) {
-    let nextHistoryIndex = state.historyIndex - 2;
-    nextHistoryIndex = nextHistoryIndex > 0 ? nextHistoryIndex : 0;
+    // undoing last computer + human movement
+    const nextHistoryIndex = state.historyIndex - 2;
+    if (nextHistoryIndex <= 0) {
+      return state;
+    }
     return {
       ...state,
       boardState: state.history[nextHistoryIndex],
@@ -40,10 +43,12 @@ export const boardReducer = (state = {}, action) => {
     };
   }
   if (action.type === actionTypes.REDO_ACTION) {
-    if (state.historyIndex + 1 > state.history.length) {
+    // redoing last human movement
+    const nextHistoryIndex = state.historyIndex + 1;
+    console.log('redo', nextHistoryIndex, state.history.length);
+    if (nextHistoryIndex > state.history.length) {
       return state;
     }
-    const nextHistoryIndex = state.historyIndex + 1;
     return {
       ...state,
       boardState: state.history[nextHistoryIndex],
