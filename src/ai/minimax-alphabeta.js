@@ -48,23 +48,26 @@ export function minimaxValue(prevBoardState, position, computerSymbol, currentPl
     // compute all posible moves and collect theirs minimax
     let best = isMaximizing ? -100 : 100;
     const emptyCells = getEmptyCells(boardState);
-    emptyCells.forEach(nextPosition => {
+    for (let index = 0; index < emptyCells.length; index++) {
+      const nextPosition = emptyCells[index];
       const nextBoardState = [...boardState];
       nextBoardState[nextPosition] = currentPlayerSymbol;
+
       // recurse
       const score = minimaxValue(nextBoardState, nextPosition, computerSymbol, other(currentPlayerSymbol), !isMaximizing, maxAlpha, minBeta);
       best = isMaximizing ? Math.max(best, score) : Math.min(best, score);
+
       // this is the pruning
       if (isMaximizing) {
         maxAlpha = Math.max(score, maxAlpha);
       } else {
         minBeta = Math.min(score, minBeta);
       }
-      if (maxAlpha < minBeta) {
+      if (maxAlpha > minBeta) {
         // console.log('pruning  position/nextPosition', position, nextPosition, 'score/best', score, best, 'alpha/beta', maxAlpha, minBeta);
         return best;
       }
-    });
+    }
 
     // the minimax value
     return best;
