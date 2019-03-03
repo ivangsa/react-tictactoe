@@ -19,6 +19,7 @@ export function Board(props) {
           onRedoClick={props.onRedoClick} 
           canUndo={props.canUndo}
           canRedo={props.canRedo}
+          message={props.message}
       />
     </div>
   );
@@ -34,6 +35,13 @@ function Square(props) {
 }
 
 function GameToolbar(props) {
+  if (props.message) {
+    return (
+      <div className="tic-tac-toe-toolbar">
+        <h2 className="end-game">{props.message}</h2>
+      </div>
+    );
+  }
   const undoClassName = 'undo' + (props.canUndo ? '' : ' disabled');
   const redoClassName = 'redo' + (props.canRedo ? '' : ' disabled');
   return (
@@ -101,18 +109,6 @@ export function ChooseComputerAlgorithmPanel(props) {
           Random play
         </button>
       </div>
-    </div>
-  );
-}
-
-/**
- *
- * @param {*} props
- */
-export function EndGameResult(props) {
-  return (
-    <div className="tic-tac-toe-info">
-      <div onClick={props.onClick}>End Game</div>
     </div>
   );
 }

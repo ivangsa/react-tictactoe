@@ -74,7 +74,13 @@ body {
     h2 {
       float: left;
       color: $title-label-color;
-      margin: 10px 20px;
+      margin: 10px 0px;
+      font-size: 22px;
+      width: 160px;
+      text-align: center;
+      &.end-game {
+        width: 100%;
+      }
     }
   }
 

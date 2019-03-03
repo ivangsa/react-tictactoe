@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { calculateNextMove, calculateWinner, isTerminal } from './ai/AI';
-import { Board, ChooseSymbolPanel, EndGameResult, NewGamePanel, ChooseComputerAlgorithmPanel } from './Board';
+import { Board, ChooseSymbolPanel, NewGamePanel, ChooseComputerAlgorithmPanel } from './Board';
 import * as actions from './store/actions';
 
 function mapStateToProps(state) {
@@ -77,7 +77,6 @@ class Game extends React.Component {
 
   render() {
     const boardState = this.props.boardState;
-    const winner = calculateWinner(boardState);
 
     if (!this.props.matchId) {
       return this.renderGame(<NewGamePanel onClick={() => this.onNewGameClick()} />);
@@ -93,8 +92,12 @@ class Game extends React.Component {
       );
     }
 
-    if (false && winner) {
-      return this.renderGame(<EndGameResult onClick={() => this.onNewGameClick()} />);
+    let message = null;
+    if (isTerminal(boardState)) {
+      const winner = calculateWinner(boardState);
+      if (winner) {
+        message = winner === this.props.humanPlayerSymbol ? 'You win!!' : 'Computer Says No!';
+      }
     }
 
     if (this.props.matchId) {
@@ -106,6 +109,7 @@ class Game extends React.Component {
           onRedoClick={() => this.onRedoClick()}
           canUndo={this.canUndo()}
           canRedo={this.canRedo()}
+          message={message}
         />
       );
     }
