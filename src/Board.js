@@ -1,6 +1,10 @@
 import React from 'react';
 import { algorithms } from './ai/AI';
 
+/**
+ *
+ * @param {*} props
+ */
 export function Board(props) {
   let rows = [];
   for (let i = 0; i < 9; i++) {
@@ -20,6 +24,10 @@ export function Board(props) {
   );
 }
 
+/**
+ *
+ * @param {*} props
+ */
 function Square(props) {
   const className = props.value + 'Symbol tic-tac-toe-cell';
   return <div className={className} onClick={props.onClick} />;
@@ -41,6 +49,10 @@ function GameToolbar(props) {
   );
 }
 
+/**
+ *
+ * @param {*} props
+ */
 export function NewGamePanel(props) {
   return (
     <div className="tic-tac-toe-info tic-tac-toe-board">
@@ -54,6 +66,10 @@ export function NewGamePanel(props) {
   );
 }
 
+/**
+ *
+ * @param {*} props
+ */
 export function ChooseSymbolPanel(props) {
   return (
     <div className="tic-tac-toe-info tic-tac-toe-board">
@@ -66,6 +82,10 @@ export function ChooseSymbolPanel(props) {
   );
 }
 
+/**
+ *
+ * @param {*} props
+ */
 export function ChooseComputerAlgorithmPanel(props) {
   return (
     <div className="tic-tac-toe-info tic-tac-toe-board">
@@ -85,6 +105,10 @@ export function ChooseComputerAlgorithmPanel(props) {
   );
 }
 
+/**
+ *
+ * @param {*} props
+ */
 export function EndGameResult(props) {
   return (
     <div className="tic-tac-toe-info">

@@ -13,6 +13,9 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ ...actions }, dispatch);
 }
 
+/**
+ * React component for tictactoe game.
+ */
 class Game extends React.Component {
   constructor(props) {
     super(props);

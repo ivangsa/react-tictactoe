@@ -1,11 +1,11 @@
-import { calculateNextMove, boardToString, other, isTerminal, calculateWinner } from '../AI';
+import { calculateNextMove, boardToString, other, isTerminal, calculateWinner, algorithms } from '../AI';
 import { minimaxMove, minimaxValue } from '../minimax';
 
 const x = 'x';
 const o = 'o';
 const n = null;
 
-test('aiPlay', () => {
+test('war games (minimax)', () => {
   let boardState = null;
   let currentPlayerSymbol = x;
 
@@ -16,41 +16,38 @@ test('aiPlay', () => {
     n, n, n
   ];
 
-  // while(!isTerminal(boardState)) {
-  //   currentPlayerSymbol = other(currentPlayerSymbol);
-  //   boardState = aiPlay(boardState, currentPlayerSymbol);
-  // }
+  while (!isTerminal(boardState)) {
+    currentPlayerSymbol = other(currentPlayerSymbol);
+    boardState = aiPlay(boardState, currentPlayerSymbol, algorithms.minimax);
+  }
 
-  // expect(calculateWinner(boardState)).toBe(null);
+  expect(calculateWinner(boardState)).toBe(null);
 });
 
-test('aiPlay', () => {
-  let boardState = null;
-  let currentPlayerSymbol = x;
-
+test('war games (alphabeta)', () => {
   /* prettier-ignore */
-  boardState = [
+  const gameBoardState = [
     n, n, n,
-    n, x, o,
+    n, n, n,
     n, n, n
   ];
 
-  // while(!isTerminal(boardState)) {
-  //   currentPlayerSymbol = other(currentPlayerSymbol);
-  //   boardState = aiPlay(boardState, currentPlayerSymbol);
-  // }
+  for (let index = 0; index < 1000; index++) {
+    let currentPlayerSymbol = x;
+    let boardState = [...gameBoardState];
+    while (!isTerminal(boardState)) {
+      currentPlayerSymbol = other(currentPlayerSymbol);
+      boardState = aiPlay(boardState, currentPlayerSymbol, algorithms.alphabeta);
+    }
 
-  // expect(calculateWinner(boardState)).toBe(null);
+    expect(calculateWinner(boardState)).toBe(null);
+  }
 });
 
-function aiPlay(boardState, currentPlayerSymbol) {
-  const position = calculateNextMove(boardState, currentPlayerSymbol);
+function aiPlay(boardState, currentPlayerSymbol, algorithm) {
+  const position = calculateNextMove(boardState, currentPlayerSymbol, algorithm);
   const nextBoardState = [...boardState];
   nextBoardState[position] = currentPlayerSymbol;
-  console.log(boardToString(nextBoardState));
+  // console.log(boardToString(nextBoardState));
   return nextBoardState;
-}
-
-function gameOver(boardState) {
-  return getEmptyCells(boardState).length === 0;
 }

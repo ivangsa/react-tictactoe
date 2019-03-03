@@ -1,8 +1,13 @@
 import { calculateScore, getEmptyCells, getRandomEntry, isTerminal, other } from './AI';
 
+/**
+ * Calculates best move base on minimax value.
+ *
+ * @param {*} boardState
+ * @param {*} computerSymbol
+ */
 export function minimaxWithAlphaBetaMove(boardState, computerSymbol) {
   const emptyCells = getEmptyCells(boardState);
-  console.log('length', emptyCells.length);
 
   const moves = emptyCells.reduce((moves, position) => {
     const score = minimaxValue(boardState, position, computerSymbol, computerSymbol);
@@ -21,6 +26,17 @@ export function minimaxWithAlphaBetaMove(boardState, computerSymbol) {
   return getRandomEntry(moves[bestMoves]);
 }
 
+/**
+ * Calculates minimax value (with alpha/beta pruning) for position given a previous board state.
+ *
+ * @param {*} prevBoardState
+ * @param {*} position
+ * @param {*} computerSymbol
+ * @param {*} currentPlayerSymbol
+ * @param {*} isMaximizing
+ * @param {*} maxAlpha
+ * @param {*} minBeta
+ */
 export function minimaxValue(prevBoardState, position, computerSymbol, currentPlayerSymbol, isMaximizing = false, maxAlpha = -1000, minBeta = 1000) {
   const boardState = [...prevBoardState];
   boardState[position] = currentPlayerSymbol;
@@ -45,7 +61,7 @@ export function minimaxValue(prevBoardState, position, computerSymbol, currentPl
         minBeta = Math.min(score, minBeta);
       }
       if (maxAlpha < minBeta) {
-        // console.log('pruning position/nextPosition', position, nextPosition, 'score/best', score, best, 'alpha/beta', maxAlpha, minBeta);
+        // console.log('pruning  position/nextPosition', position, nextPosition, 'score/best', score, best, 'alpha/beta', maxAlpha, minBeta);
         return best;
       }
     });

@@ -1,8 +1,13 @@
 import { calculateScore, getEmptyCells, getRandomEntry, isTerminal, other } from './AI';
 
+/**
+ * Calculates best move base on minimax value.
+ *
+ * @param {C} boardState
+ * @param {*} computerSymbol
+ */
 export function minimaxMove(boardState, computerSymbol) {
   const emptyCells = getEmptyCells(boardState);
-  console.log('length', emptyCells.length);
 
   const moves = emptyCells.reduce((moves, position) => {
     const score = minimaxValue(boardState, position, computerSymbol, computerSymbol);
@@ -21,6 +26,15 @@ export function minimaxMove(boardState, computerSymbol) {
   return getRandomEntry(moves[bestMoves]);
 }
 
+/**
+ * Calculates minimax value for position given a previous board state.
+ *
+ * @param {*} prevBoardState
+ * @param {*} position
+ * @param {*} computerSymbol
+ * @param {*} currentPlayerSymbol
+ * @param {*} isMaximizing
+ */
 export function minimaxValue(prevBoardState, position, computerSymbol, currentPlayerSymbol, isMaximizing = false) {
   const boardState = [...prevBoardState];
   boardState[position] = currentPlayerSymbol;

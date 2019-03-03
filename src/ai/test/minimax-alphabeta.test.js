@@ -1,11 +1,11 @@
-import { boardToString } from '../';
+import { boardToString } from '../AI';
 import { minimaxWithAlphaBetaMove as minimaxMove } from '../minimax-alphabeta';
 
 const x = 'x';
 const o = 'o';
 const n = null;
 
-test('alphaBeta', () => {
+test('tests alphaBeta', () => {
   let boardState = null;
 
   /* prettier-ignore */
