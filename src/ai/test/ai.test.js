@@ -1,4 +1,4 @@
-import { calculateNextMove, boardToString, other, isTerminal, calculateWinner } from '..';
+import { calculateNextMove, boardToString, other, isTerminal, calculateWinner } from '../AI';
 import { minimaxMove, minimaxValue } from '../minimax';
 
 const x = 'x';

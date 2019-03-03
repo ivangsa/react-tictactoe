@@ -1,4 +1,4 @@
-import { getEmptyCells, getRandomEntry } from './';
+import { getEmptyCells, getRandomEntry } from './AI';
 
 export function randomMove(boardState) {
   const emptyCells = getEmptyCells(boardState);

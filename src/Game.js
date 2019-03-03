@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { calculateNextMove, calculateWinner, isTerminal } from './ai';
-import { Board, ChooseSymbolPanel, EndGameResult, NewGamePanel } from './Board';
+import { calculateNextMove, calculateWinner, isTerminal } from './ai/AI';
+import { Board, ChooseSymbolPanel, EndGameResult, NewGamePanel, ChooseComputerAlgorithmPanel } from './Board';
 import * as actions from './store/actions';
 
 function mapStateToProps(state) {
@@ -14,11 +14,19 @@ function mapDispatchToProps(dispatch) {
 }
 
 class Game extends React.Component {
+  constructor(props) {
+    super(props);
+    this.thinking = false;
+  }
+
   onNewGameClick() {
     this.props.newGameAction();
   }
 
   onHumanClick(i) {
+    if (this.thinking) {
+      return;
+    }
     const boardState = this.props.boardState;
     if (boardState[i] || calculateWinner(boardState)) {
       return;
@@ -27,25 +35,31 @@ class Game extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.nextPlayerSymbol && nextProps.computerPlayerSymbol === nextProps.nextPlayerSymbol && !isTerminal(nextProps.boardState)) {
+    /* prettier-ignore */
+    if (
+      nextProps.nextPlayerSymbol
+      && nextProps.computerPlayerSymbol === nextProps.nextPlayerSymbol
+      && !isTerminal(nextProps.boardState)
+    ) {
       this.doComputerMove(nextProps.boardState);
     }
   }
 
   doComputerMove(boardState) {
-    const position = calculateNextMove(boardState, this.props.computerPlayerSymbol);
+    this.thinking = true;
+    const position = calculateNextMove(boardState, this.props.computerPlayerSymbol, this.props.computerAlgorithm);
     this.props.moveAction(position);
+    this.thinking = false;
   }
 
   onUndoClick() {
-    console.log('undoClick');
     if (this.canUndo()) {
       this.props.undoAction();
     }
   }
 
   canUndo() {
-    return this.props.historyIndex > 0; // XXX
+    return this.props.historyIndex > 1;
   }
 
   onRedoClick() {
@@ -55,7 +69,7 @@ class Game extends React.Component {
   }
 
   canRedo() {
-    return this.props.history && this.props.historyIndex && this.props.history.length - 1 > this.props.historyIndex;
+    return this.props.history && this.props.history.length - 1 > this.props.historyIndex;
   }
 
   render() {
@@ -70,6 +84,12 @@ class Game extends React.Component {
       return this.renderGame(<ChooseSymbolPanel onClick={humanPlayerSymbol => this.props.selectHumanSymbolAction(humanPlayerSymbol)} />);
     }
 
+    if (!this.props.computerAlgorithm) {
+      return this.renderGame(
+        <ChooseComputerAlgorithmPanel onClick={computerAlgorithm => this.props.selectComputerAlgorithmAction(computerAlgorithm)} />
+      );
+    }
+
     if (false && winner) {
       return this.renderGame(<EndGameResult onClick={() => this.onNewGameClick()} />);
     }
@@ -77,10 +97,12 @@ class Game extends React.Component {
     if (this.props.matchId) {
       return this.renderGame(
         <Board
-          squares={boardState}
+          boadState={boardState}
           onClick={i => this.onHumanClick(i)}
           onUndoClick={() => this.onUndoClick()}
           onRedoClick={() => this.onRedoClick()}
+          canUndo={this.canUndo()}
+          canRedo={this.canRedo()}
         />
       );
     }
@@ -92,6 +114,7 @@ class Game extends React.Component {
 
     const status = `
         MatchId: ${this.props.matchId}
+        Algorithm: ${this.props.computerAlgorithm}
         Human: ${this.props.humanPlayerSymbol}
         Computer: ${this.props.computerPlayerSymbol}
         Next player: ${this.props.nextPlayerSymbol}

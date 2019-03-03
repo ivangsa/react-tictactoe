@@ -1,4 +1,4 @@
-import { calculateScore, getEmptyCells, other, calculateWinner, isTerminal, getRandomEntry, boardToString } from './';
+import { calculateScore, getEmptyCells, getRandomEntry, isTerminal, other } from './AI';
 
 export function minimaxMove(boardState, computerSymbol) {
   const emptyCells = getEmptyCells(boardState);

@@ -1,7 +1,7 @@
-import { initialState } from '.';
 import * as actionTypes from './actionTypes';
+import { initialState } from './store';
 
-export const boardReducer = (state = {}, action) => {
+export const boardReducer = (state = initialState, action) => {
   if (action.type === actionTypes.NEW_GAME_ACTION) {
     return {
       ...initialState,
@@ -44,7 +44,7 @@ export const boardReducer = (state = {}, action) => {
   }
   if (action.type === actionTypes.REDO_ACTION) {
     // redoing last human movement
-    const nextHistoryIndex = state.historyIndex + 1;
+    const nextHistoryIndex = state.historyIndex + 2;
     console.log('redo', nextHistoryIndex, state.history.length);
     if (nextHistoryIndex > state.history.length) {
       return state;
@@ -52,8 +52,17 @@ export const boardReducer = (state = {}, action) => {
     return {
       ...state,
       boardState: state.history[nextHistoryIndex],
-      historyIndex: nextHistoryIndex,
-      nextPlayerSymbol: other(state.nextPlayerSymbol)
+      historyIndex: nextHistoryIndex
+    };
+  }
+  return state;
+};
+
+export const computerAlgorithmReducer = (state = initialState, action) => {
+  if (action.type === actionTypes.SELECT_COMPUTER_ALGORITHM_ACTION) {
+    return {
+      ...state,
+      ...action.payload
     };
   }
   return state;

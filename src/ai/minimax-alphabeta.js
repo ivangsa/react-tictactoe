@@ -1,4 +1,4 @@
-import { calculateScore, getEmptyCells, getRandomEntry, isTerminal, other } from './';
+import { calculateScore, getEmptyCells, getRandomEntry, isTerminal, other } from './AI';
 
 export function minimaxWithAlphaBetaMove(boardState, computerSymbol) {
   const emptyCells = getEmptyCells(boardState);
@@ -45,7 +45,7 @@ export function minimaxValue(prevBoardState, position, computerSymbol, currentPl
         minBeta = Math.min(score, minBeta);
       }
       if (maxAlpha < minBeta) {
-        console.log('pruning position/nextPosition', position, nextPosition, 'score/best', score, best, 'alpha/beta', maxAlpha, minBeta);
+        // console.log('pruning position/nextPosition', position, nextPosition, 'score/best', score, best, 'alpha/beta', maxAlpha, minBeta);
         return best;
       }
     });

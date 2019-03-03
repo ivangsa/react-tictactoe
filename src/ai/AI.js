@@ -2,6 +2,12 @@ import { randomMove } from './random';
 import { minimaxMove } from './minimax';
 import { minimaxWithAlphaBetaMove } from './minimax-alphabeta';
 
+export const algorithms = {
+  minimax: 'minimax',
+  alphabeta: 'alphabeta',
+  random: 'random'
+};
+
 /**
  * Calculates computer's next move.
  *
@@ -13,15 +19,21 @@ import { minimaxWithAlphaBetaMove } from './minimax-alphabeta';
  * @param {[0-8]} boardState
  * @param {'x'|'o'} computerSymbol
  */
-export const calculateNextMove = (boardState, computerSymbol) => {
+export const calculateNextMove = (boardState, computerSymbol, algorithm = algorithms.minimax) => {
   // always play center
   if (boardState[4] === null) {
     return 4;
   }
 
-  return minimaxWithAlphaBetaMove(boardState, computerSymbol);
-  return minimaxMove(boardState, computerSymbol);
-  return randomMove(boardState);
+  if (algorithm === algorithms.alphabeta) {
+    return minimaxWithAlphaBetaMove(boardState, computerSymbol);
+  }
+  if (algorithm === algorithms.minimax) {
+    return minimaxMove(boardState, computerSymbol);
+  }
+  if (algorithm === algorithms.random) {
+    return randomMove(boardState);
+  }
 };
 
 export function isTerminal(boardState) {

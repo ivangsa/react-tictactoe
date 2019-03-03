@@ -3,7 +3,7 @@ $cell-background-color: #9a8297;
 $cell-hover-background-color: #d0782a;
 $field-border-radius: 6px;
 $field-size: 300px;
-$toolbar-size: 60px;
+$toolbar-size: 40px;
 $status-size: 200px;
 $tic-tac-toe-cell-padding: 10px;
 $field-padding: 5px;
@@ -14,7 +14,6 @@ $symbol-roundness: 3px;
 $symbol-size: 50px;
 $oSize: $symbol-size - $symbol-thickness;
 
-$new-game-button--color: #9a8297;
 $new-game-button--hover-color: #d0782a;
 $new-game-button--border-radius: 20px;
 
@@ -43,13 +42,26 @@ body {
 
     .undo,
     .redo {
-      background-color: $new-game-button--color;
-      width: $toolbar-size;
+      width: 70px;
       height: $toolbar-size;
-      border-radius: 15%;
+      border-radius: 50%;
+      border-width: 0;
+      background-color: $cell-hover-background-color;
       color: white;
-      text-align: center;
-      vertical-align: middle;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      &:hover {
+        background-color: $cell-background-color;
+        border-width: 1px;
+      }
+      &.disabled {
+        background-color: $body-background-color;
+        cursor: default;
+        border-width: 0;
+      }
+      &:focus {
+        outline: 0;
+      }
     }
 
     .undo {
@@ -58,9 +70,17 @@ body {
     .redo {
       float: right;
     }
+
+    h2 {
+      float: left;
+      color: $title-label-color;
+      margin: 10px 20px;
+    }
   }
 
   .tic-tac-toe-info {
+    display: block;
+    text-align: center;
     width: $field-size;
     height: $field-size;
     background-color: white;
@@ -68,23 +88,19 @@ body {
     transition: visibility 0s 0.3s, opacity 0.3s linear;
     opacity: 1;
 
-    .tic-tac-toe-new-game-button {
-      position: relative;
-      top: 50%;
-      left: 50%;
-      background-color: $new-game-button--color;
-      border-radius: $new-game-button--border-radius;
-      color: white;
-      padding: 10px;
-      cursor: pointer;
-      &:hover {
-        background-color: $new-game-button--hover-color;
-      }
-    }
     h1.tic-tac-toe--title-label {
       color: $title-label-color;
-      margin: 30px auto;
+      margin: 20px auto;
       text-align: center;
+      width: 100%;
+    }
+    .tic-tac-toe-buttons {
+      display: flex;
+      margin: 0 auto;
+      button {
+        border-width: 0;
+        font-weight: 600;
+      }
     }
   }
 
@@ -101,6 +117,7 @@ body {
       cursor: pointer;
       transition: background-color 0.3s;
       position: relative;
+      color: white;
 
       &:hover {
         background-color: $cell-hover-background-color;

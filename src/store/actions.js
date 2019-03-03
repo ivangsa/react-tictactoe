@@ -2,9 +2,9 @@ import * as actionTypes from './actionTypes';
 
 export const newGameAction = () => {
   const matchId = require('uuid').v4();
-  const isComputerStarting = false; // Math.random() >= 0.5;
-  let nextPlayerSymbol = 'o'; // null;
-  let computerPlayerSymbol = 'x'; // null;
+  const isComputerStarting = Math.random() >= 0.5;
+  let nextPlayerSymbol = null;
+  let computerPlayerSymbol = null;
   if (isComputerStarting) {
     nextPlayerSymbol = Math.random() >= 0.5 ? 'x' : 'o';
     computerPlayerSymbol = nextPlayerSymbol;
@@ -24,6 +24,15 @@ export const selectHumanSymbolAction = humanPlayerSymbol => {
     type: actionTypes.SELECT_HUMAN_SYMBOL_ACTION,
     payload: {
       humanPlayerSymbol
+    }
+  };
+};
+
+export const selectComputerAlgorithmAction = computerAlgorithm => {
+  return {
+    type: actionTypes.SELECT_COMPUTER_ALGORITHM_ACTION,
+    payload: {
+      computerAlgorithm
     }
   };
 };
