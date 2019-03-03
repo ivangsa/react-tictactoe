@@ -8,6 +8,8 @@ export const algorithms = {
   random: 'random'
 };
 
+const boardCorners = [0, 2, 6, 8];
+
 /**
  * Calculates computer's next move.
  *
@@ -23,6 +25,11 @@ export const calculateNextMove = (boardState, computerSymbol, algorithm = algori
   // always play center
   if (boardState[4] === null) {
     return 4;
+  }
+
+  // clever hack: in second move always choose one corner
+  if (getEmptyCells(boardState).length === 8) {
+    return getRandomEntry(boardCorners);
   }
 
   if (algorithm === algorithms.alphabeta) {
@@ -85,7 +92,7 @@ export function getEmptyCells(boardState) {
 }
 
 export function getRandomEntry(array) {
-  const random = Math.floor(Math.random() * (array.length - 1));
+  const random = Math.floor(Math.random() * array.length);
   return array[random];
 }
 
