@@ -22,7 +22,7 @@ export function minimaxMove(boardState, computerSymbol) {
   }, {});
 
   const bestMoves = Object.keys(moves).sort((a, b) => b - a)[0];
-  console.log('moves', moves, 'bestMoves', bestMoves, moves[bestMoves]);
+  // console.log('moves', moves, 'bestMoves', bestMoves, moves[bestMoves]);
   return getRandomEntry(moves[bestMoves]);
 }
 
