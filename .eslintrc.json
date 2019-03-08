@@ -6,7 +6,7 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/all",
+        "plugin:react/recommended",
         "plugin:jest/recommended"
       ],
     "globals": {
@@ -25,7 +25,7 @@
     ],
     "rules": {
         "react/prop-types": 1,
-        "react/jsx-uses-react": "error",
-        "react/jsx-uses-vars": "error"
+        "react/destructuring-assignment": 2,
+        "react/jsx-no-bind": 1
     }
 }

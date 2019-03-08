@@ -72,7 +72,7 @@ export default function Game() {
         <div className="tic-tac-toe-status">
           <pre>
             {status}
-            <button onClick={() => onNewGameClick()}>Reset Game</button>
+            <button onClick={onNewGameClick}>Reset Game</button>
           </pre>
         </div>
       </div>
@@ -84,7 +84,7 @@ export default function Game() {
     const boardState = state.boardState;
 
     if (!state.matchId) {
-      return renderGame(<NewGamePanel onClick={() => onNewGameClick()} />);
+      return renderGame(<NewGamePanel onClick={onNewGameClick} />);
     }
 
     if (!state.nextPlayerSymbol) {
@@ -109,9 +109,9 @@ export default function Game() {
       return renderGame(
         <Board
           boadState={boardState}
-          onClick={i => onHumanClick(i)}
-          onUndoClick={() => onUndoClick()}
-          onRedoClick={() => onRedoClick()}
+          onClick={onHumanClick}
+          onUndoClick={onUndoClick}
+          onRedoClick={onRedoClick}
           canUndo={canUndo()}
           canRedo={canRedo()}
           message={message}

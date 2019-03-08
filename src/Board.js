@@ -8,7 +8,7 @@ import { algorithms } from './ai/AI';
 export function Board({ boadState, onClick, onUndoClick, canUndo, onRedoClick, canRedo, message }) {
   let rows = [];
   for (let i = 0; i < 9; i++) {
-    rows.push(<Square value={boadState[i]} onClick={() => onClick(i)} key={i} />);
+    rows.push(<Square value={boadState[i]} onClick={onClick} key={i} index={i} />);
   }
   return (
     <div>
@@ -25,13 +25,18 @@ export function Board({ boadState, onClick, onUndoClick, canUndo, onRedoClick, c
   );
 }
 
-/**
- *
- * @param {*} props
- */
-function Square({ value, onClick }) {
-  const className = value + 'Symbol tic-tac-toe-cell';
-  return <div className={className} onClick={onClick} />;
+class Square extends React.PureComponent {
+  constructor(...args) {
+    super(...args);
+    this.onClick = this.onClick.bind(this);
+  }
+  onClick() {
+    this.props.onClick(this.props.index);
+  }
+  render() {
+    const className = this.props.value + 'Symbol tic-tac-toe-cell';
+    return <div className={className} onClick={this.onClick} />;
+  }
 }
 
 function GameToolbar({ onUndoClick, canUndo, onRedoClick, canRedo, message }) {
@@ -42,15 +47,21 @@ function GameToolbar({ onUndoClick, canUndo, onRedoClick, canRedo, message }) {
       </div>
     );
   }
+  const undoClick = function() {
+    onUndoClick();
+  };
+  const redoClick = function() {
+    onRedoClick();
+  };
   const undoClassName = 'undo' + (canUndo ? '' : ' disabled');
   const redoClassName = 'redo' + (canRedo ? '' : ' disabled');
   return (
     <div className="tic-tac-toe-toolbar">
-      <button className={undoClassName} onClick={() => onUndoClick()}>
+      <button className={undoClassName} onClick={undoClick}>
         Undo
       </button>
       <h2>Tic Tac Toe</h2>
-      <button className={redoClassName} onClick={() => onRedoClick()}>
+      <button className={redoClassName} onClick={redoClick}>
         Redo
       </button>
     </div>
