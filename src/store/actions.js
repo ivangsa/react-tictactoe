@@ -1,7 +1,8 @@
 import * as actionTypes from './actionTypes';
+import uuid from 'uuid';
 
 export const newGameAction = () => {
-  const matchId = require('uuid').v4();
+  const matchId = uuid.v4();
   const isComputerStarting = Math.random() >= 0.5;
   let nextPlayerSymbol = null;
   let computerPlayerSymbol = null;
@@ -46,14 +47,14 @@ export const moveAction = position => {
   };
 };
 
-export const undoAction = (player, square) => {
+export const undoAction = () => {
   return {
     type: actionTypes.UNDO_ACTION,
     payload: {}
   };
 };
 
-export const redoAction = (player, square) => {
+export const redoAction = () => {
   return {
     type: actionTypes.REDO_ACTION,
     payload: {}

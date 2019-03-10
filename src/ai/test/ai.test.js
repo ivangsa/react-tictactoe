@@ -1,5 +1,4 @@
-import { calculateNextMove, boardToString, other, isTerminal, calculateWinner, algorithms } from '../AI';
-import { minimaxMove, minimaxValue } from '../minimax';
+import { algorithms, calculateNextMove, calculateWinner, isTerminal, other } from '../AI';
 
 const x = 'x';
 const o = 'o';
@@ -7,7 +6,7 @@ const n = null;
 
 test('war games (minimax)', () => {
   let boardState = null;
-  let currentPlayerSymbol = x;
+  let currentPlayerSymbol = o;
 
   /* prettier-ignore */
   boardState = [

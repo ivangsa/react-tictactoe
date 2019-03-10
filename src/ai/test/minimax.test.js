@@ -1,4 +1,4 @@
-import { boardToString } from '../AI';
+// import { boardToString } from '../AI';
 import { minimaxMove, minimaxValue } from '../minimax';
 
 const x = 'x';
@@ -86,16 +86,16 @@ test('tests terminal states score', () => {
 
 function testScore(boardState, position, expected) {
   const score = minimaxValue(boardState, position, x, x);
-  if (score !== expected) {
-    console.log('score', score, boardToString(boardState));
-  }
+  // if (score !== expected) {
+  //   console.log('score', score, boardToString(boardState));
+  // }
   expect(score).toBe(expected);
 }
 
 function testMinimaxMove(boardState, expected) {
   const position = minimaxMove(boardState, x);
-  if (position !== expected) {
-    console.log('position', position, boardToString(boardState));
-  }
+  // if (position !== expected) {
+  //   console.log('position', position, boardToString(boardState));
+  // }
   expect(position).toBe(expected);
 }

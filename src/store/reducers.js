@@ -43,9 +43,8 @@ export const boardReducer = (state = initialState, action) => {
     };
   }
   if (action.type === actionTypes.REDO_ACTION) {
-    // redoing last human movement
+    // redoing last computer + human movements
     const nextHistoryIndex = state.historyIndex + 2;
-    console.log('redo', nextHistoryIndex, state.history.length);
     if (nextHistoryIndex > state.history.length) {
       return state;
     }

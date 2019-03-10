@@ -1,4 +1,4 @@
-import { boardToString } from '../AI';
+// import { boardToString } from '../AI';
 import { minimaxWithAlphaBetaMove as minimaxMove } from '../minimax-alphabeta';
 
 const x = 'x';
@@ -44,7 +44,7 @@ test('tests alphaBeta', () => {
 function testMinimaxMove(boardState, expected) {
   const position = minimaxMove(boardState, x);
   if (position !== expected) {
-    console.log('position', position, boardToString(boardState));
+    // console.log('position', position, boardToString(boardState));
   }
   expect(position).toBe(expected);
 }
