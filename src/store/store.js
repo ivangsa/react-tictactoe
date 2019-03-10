@@ -1,4 +1,3 @@
-import { createStore } from 'redux';
 import { boardReducer, computerAlgorithmReducer } from './reducers';
 
 export const initialState = {
@@ -12,10 +11,7 @@ export const initialState = {
   historyIndex: 0
 };
 
-function rootReducer(appState, action) {
+export function rootReducer(appState, action) {
   const state = boardReducer(appState, action);
   return computerAlgorithmReducer(state, action);
 }
-
-//export default createStore(combineReducers(reducers), initialState);
-export default createStore(rootReducer, initialState);

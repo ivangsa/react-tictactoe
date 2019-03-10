@@ -1,136 +1,69 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useReducer } from 'react';
 import { calculateNextMove, calculateWinner, isTerminal } from './ai/AI';
 import { Board, ChooseComputerAlgorithmPanel, ChooseSymbolPanel, NewGamePanel } from './Board';
+import { initialState, rootReducer } from './store/store';
 import * as actions from './store/actions';
 
-function mapStateToProps(state) {
-  return { ...state };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ ...actions }, dispatch);
-}
 
 /**
  * React component for tictactoe game.
  */
-class Game extends React.Component {
-  constructor(props) {
-    super(props);
-    this.thinking = false;
+export default function Game() {
+  console.log("Game");
+  const [state, dispatch] = useReducer(rootReducer, initialState);
+
+  const onNewGameClick = () => {
+    dispatch(actions.newGameAction());
   }
 
-  componentDidUpdate() {
-    /* prettier-ignore */
-    if (
-      this.props.nextPlayerSymbol
-      && this.props.computerPlayerSymbol === this.props.nextPlayerSymbol
-      && !isTerminal(this.props.boardState)
-    ) {
-      this.doComputerMove(this.props.boardState);
-    }
-  }
-
-  onNewGameClick() {
-    this.props.newGameAction();
-  }
-
-  onHumanClick(i) {
-    if (this.thinking) {
-      return;
-    }
-    const boardState = this.props.boardState;
+  const onHumanClick = (i) => {
+    const boardState = state.boardState;
     if (boardState[i] || calculateWinner(boardState)) {
       return;
     }
-    this.props.moveAction(i);
+    dispatch(actions.moveAction(i));
   }
 
-  doComputerMove(boardState) {
-    this.thinking = true;
-    const position = calculateNextMove(boardState, this.props.computerPlayerSymbol, this.props.computerAlgorithm);
-    this.props.moveAction(position);
-    this.thinking = false;
+  const doComputerMove = () => {
+    const position = calculateNextMove(state.boardState, state.computerPlayerSymbol, state.computerAlgorithm);
+    dispatch(actions.moveAction(position));
   }
 
-  onUndoClick() {
-    if (this.canUndo()) {
-      this.props.undoAction();
+  const onUndoClick = () => {
+    if (canUndo()) {
+      dispatch(actions.undoAction());
     }
   }
 
-  canUndo() {
-    return this.props.historyIndex > 1;
+  const canUndo = () => {
+    return state.historyIndex > 1;
   }
 
-  onRedoClick() {
-    if (this.canRedo()) {
-      this.props.redoAction();
-    }
-  }
-
-  canRedo() {
-    return this.props.history && this.props.history.length - 1 > this.props.historyIndex;
-  }
-
-  render() {
-    const boardState = this.props.boardState;
-
-    if (!this.props.matchId) {
-      return this.renderGame(<NewGamePanel onClick={() => this.onNewGameClick()} />);
-    }
-
-    if (!this.props.nextPlayerSymbol) {
-      return this.renderGame(<ChooseSymbolPanel onClick={humanPlayerSymbol => this.props.selectHumanSymbolAction(humanPlayerSymbol)} />);
-    }
-
-    if (!this.props.computerAlgorithm) {
-      return this.renderGame(
-        <ChooseComputerAlgorithmPanel onClick={computerAlgorithm => this.props.selectComputerAlgorithmAction(computerAlgorithm)} />
-      );
-    }
-
-    let message = null;
-    if (isTerminal(boardState)) {
-      const winner = calculateWinner(boardState);
-      if (winner) {
-        message = winner === this.props.humanPlayerSymbol ? 'You win!!' : 'Computer Says No!';
-      }
-    }
-
-    if (this.props.matchId) {
-      return this.renderGame(
-        <Board
-          boadState={boardState}
-          onClick={i => this.onHumanClick(i)}
-          onUndoClick={() => this.onUndoClick()}
-          onRedoClick={() => this.onRedoClick()}
-          canUndo={this.canUndo()}
-          canRedo={this.canRedo()}
-          message={message}
-        />
-      );
+  const onRedoClick = () => {
+    if (canRedo()) {
+      dispatch(actions.redoAction());
     }
   }
 
-  renderGame(game) {
-    const boardState = this.props.boardState;
+  const canRedo = () => {
+    return state.history && state.history.length - 1 > state.historyIndex;
+  }
+
+  const renderGame = (game) => {
+    const boardState = state.boardState;
     const winner = calculateWinner(boardState);
 
     const status = `
-        MatchId: ${this.props.matchId}
-        Algorithm: ${this.props.computerAlgorithm}
-        Human: ${this.props.humanPlayerSymbol}
-        Computer: ${this.props.computerPlayerSymbol}
-        Next player: ${this.props.nextPlayerSymbol}
+        MatchId: ${state.matchId}
+        Algorithm: ${state.computerAlgorithm}
+        Human: ${state.humanPlayerSymbol}
+        Computer: ${state.computerPlayerSymbol}
+        Next player: ${state.nextPlayerSymbol}
         Winner: ${winner}
-        Board State: ${this.props.boardState}
-        History Lenght: ${this.props.history.length}
-        History Index: ${this.props.historyIndex}
-        History: ${this.props.history.map(boardState => boardState.join('-'))}
+        Board State: ${state.boardState}
+        History Lenght: ${state.history.length}
+        History Index: ${state.historyIndex}
+        History: ${state.history.map(boardState => boardState.join('-'))}
         `;
     return (
       <div>
@@ -139,34 +72,62 @@ class Game extends React.Component {
         <div className="tic-tac-toe-status">
           <pre>
             {status}
-            <button onClick={() => this.onNewGameClick()}>Reset Game</button>
+            <button onClick={() => onNewGameClick()}>Reset Game</button>
           </pre>
         </div>
       </div>
     );
     // return <div className="tic-tac-toe-game">{game}</div>;
   }
+
+  const render = () => {
+    const boardState = state.boardState;
+
+    if (!state.matchId) {
+      return renderGame(<NewGamePanel onClick={() => onNewGameClick()} />);
+    }
+
+    if (!state.nextPlayerSymbol) {
+      return renderGame(<ChooseSymbolPanel onClick={humanPlayerSymbol => dispatch(actions.selectHumanSymbolAction(humanPlayerSymbol))} />);
+    }
+
+    if (!state.computerAlgorithm) {
+      return renderGame(
+        <ChooseComputerAlgorithmPanel onClick={computerAlgorithm => dispatch(actions.selectComputerAlgorithmAction(computerAlgorithm))} />
+      );
+    }
+
+    let message = null;
+    if (isTerminal(boardState)) {
+      const winner = calculateWinner(boardState);
+      if (winner) {
+        message = winner === state.humanPlayerSymbol ? 'You win!!' : 'Computer Says No!';
+      }
+    }
+
+    if (state.matchId) {
+      return renderGame(
+        <Board
+          boadState={boardState}
+          onClick={i => onHumanClick(i)}
+          onUndoClick={() => onUndoClick()}
+          onRedoClick={() => onRedoClick()}
+          canUndo={canUndo()}
+          canRedo={canRedo()}
+          message={message}
+        />
+      );
+    }
+  }
+
+  /* prettier-ignore */
+  if (
+    state.nextPlayerSymbol
+    && state.computerPlayerSymbol === state.nextPlayerSymbol
+    && !isTerminal(state.boardState)
+  ) {
+    doComputerMove(state.boardState);
+  }
+  
+  return render();
 }
-
-Game.propTypes = {
-  matchId: PropTypes.string,
-  computerAlgorithm: PropTypes.string,
-  boardState: PropTypes.array, // array of chars ( one of ['o','x', null]), required
-  humanPlayerSymbol: PropTypes.string, //  ( one of ['o','x', null])
-  computerPlayerSymbol: PropTypes.string, // ( one of ['o','x', null])
-  nextPlayerSymbol: PropTypes.string, // ( one of ['o','x', null])
-  history: PropTypes.array, // array of boardStates
-  historyIndex: PropTypes.number,
-
-  newGameAction: PropTypes.func.isRequired,
-  selectHumanSymbolAction: PropTypes.func.isRequired,
-  selectComputerAlgorithmAction: PropTypes.func.isRequired,
-  moveAction: PropTypes.func.isRequired,
-  undoAction: PropTypes.func.isRequired,
-  redoAction: PropTypes.func.isRequired
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Game);
