@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { calculateNextMove, calculateWinner, isTerminal } from './ai/AI';
-import { Board, ChooseSymbolPanel, NewGamePanel, ChooseComputerAlgorithmPanel } from './Board';
+import { Board, ChooseComputerAlgorithmPanel, ChooseSymbolPanel, NewGamePanel } from './Board';
 import * as actions from './store/actions';
 
 function mapStateToProps(state) {
@@ -22,6 +23,17 @@ class Game extends React.Component {
     this.thinking = false;
   }
 
+  componentDidUpdate() {
+    /* prettier-ignore */
+    if (
+      this.props.nextPlayerSymbol
+      && this.props.computerPlayerSymbol === this.props.nextPlayerSymbol
+      && !isTerminal(this.props.boardState)
+    ) {
+      this.doComputerMove(this.props.boardState);
+    }
+  }
+
   onNewGameClick() {
     this.props.newGameAction();
   }
@@ -35,17 +47,6 @@ class Game extends React.Component {
       return;
     }
     this.props.moveAction(i);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    /* prettier-ignore */
-    if (
-      nextProps.nextPlayerSymbol
-      && nextProps.computerPlayerSymbol === nextProps.nextPlayerSymbol
-      && !isTerminal(nextProps.boardState)
-    ) {
-      this.doComputerMove(nextProps.boardState);
-    }
   }
 
   doComputerMove(boardState) {
@@ -146,6 +147,24 @@ class Game extends React.Component {
     // return <div className="tic-tac-toe-game">{game}</div>;
   }
 }
+
+Game.propTypes = {
+  matchId: PropTypes.string,
+  computerAlgorithm: PropTypes.string,
+  boardState: PropTypes.array, // array of chars ( one of ['o','x', null]), required
+  humanPlayerSymbol: PropTypes.string, //  ( one of ['o','x', null])
+  computerPlayerSymbol: PropTypes.string, // ( one of ['o','x', null])
+  nextPlayerSymbol: PropTypes.string, // ( one of ['o','x', null])
+  history: PropTypes.array, // array of boardStates
+  historyIndex: PropTypes.number,
+
+  newGameAction: PropTypes.func.isRequired,
+  selectHumanSymbolAction: PropTypes.func.isRequired,
+  selectComputerAlgorithmAction: PropTypes.func.isRequired,
+  moveAction: PropTypes.func.isRequired,
+  undoAction: PropTypes.func.isRequired,
+  redoAction: PropTypes.func.isRequired
+};
 
 export default connect(
   mapStateToProps,
